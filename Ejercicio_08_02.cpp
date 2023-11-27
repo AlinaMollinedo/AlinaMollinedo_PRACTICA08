@@ -4,7 +4,7 @@
 
 // Fecha creación: 25/11/2023
 
-// Fecha modificación: 25/11/2023
+// Fecha modificación: 26/11/2023
 
 // Número de ejericio: 2
 
@@ -31,6 +31,7 @@ void addFile(char[30]);
 
 int main(){
     char name[30], n[30] = " ";
+    // Agrega personas hasta que se introduzca un espacio
     do{
         cout << "\nNombre: ";
         cin.getline(name, 31);
@@ -43,20 +44,25 @@ int main(){
     return 0;
 }
 
+// Agrega una persona al archivo
 void addFile(char name[30]){
+    ofstream wf;
+    wf.open(file, ios::app);
     char gender, birthday[10];
     int age;
+
+    wf << name << ";";
     cout << "Edad: ";
     cin >> age;
+    wf << age << ";";
     cin.ignore(256, '\n');
     cout << "Sexo: ";
     cin >> gender;
+    wf << gender << ";";
     cin.ignore(256, '\n');
     cout << "Fecha de nacimiento (dd/mm/yyyy): ";
     cin.getline(birthday, 11);
+    wf << birthday << ";" << endl;
 
-    ofstream wf;
-    wf.open(file, ios::app);
-    wf << name << age << gender << birthday << endl;
     wf.close();
 }

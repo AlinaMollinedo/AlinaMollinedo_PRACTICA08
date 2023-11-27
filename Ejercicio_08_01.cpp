@@ -33,6 +33,7 @@ void readEncryption();
 int main(){
     ifstream rf;
     rf.open(fileNormal);
+    // Verifica si el archivo ya ha sido creado
     if(rf.good()){
         int op;
         cout << "Desea agregar informacion al archivo?" << endl;
@@ -63,6 +64,7 @@ int main(){
     return 0;
 }
 
+// Agrega informacion al archivo
 void generateFile(){
     ofstream wf;
     string str;
@@ -75,6 +77,7 @@ void generateFile(){
     wf.close();
 }
 
+// Encripta la informacion del archivo
 void encryptFile(){
     ofstream wf;
     ifstream rf;
@@ -95,6 +98,7 @@ void encryptFile(){
     wf.close();
 }
 
+// Desencripta la informacion del archivo
 void decryptFile(){
 
     ifstream rf;
@@ -121,6 +125,7 @@ void decryptFile(){
     
 }
 
+// Lee el archivo encriptado
 void readEncryption(){
     cout << "\n\nARCHIVO ENCRIPTADO: " << endl;
     cout << "==================\n" << endl;

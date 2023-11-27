@@ -1,0 +1,9 @@
+100;Flores;269;10.5;
+101;Macetas;58;15;
+102;Orquideas;98;100.5;
+103;Rosas;105;11.5;
+200;Velas;150;3.5;
+201;Encendedor;45;13.4;
+202;Tapete;190;25;
+501;Almohada;50;150;
+510;Manta;34;250;
