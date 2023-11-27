@@ -27,9 +27,8 @@ const char* fileRead = "PERSONAS.DAT";
 const char* fileWrite = "ACEPTADOS.DAT";
 
 struct Person{
-    char name[30], gender[1], birthday[11], month[2], year[2];
-    int age;
-};
+    char name[30], age[3] = "", gender[2], birthday[11], month[3], year[5];
+    };
 
 
 int countLines();
@@ -43,26 +42,26 @@ int main(){
     int n = countLines() - 1;
     Person p[n] = {};
     fillStructs(p);
-    for(int i = 0; i < n; i++){
-        cout << "nombre: " << p[i].name << endl;
-        cout << "genero: " << p[i].gender << endl;
-        cout << "cumple: " << p[i].birthday << endl;
-        cout << "mes: " << p[i].month << endl;
-        cout << "anhio: " << p[i].year << endl;
-    }
     char name[30];
     cout << "Ingrese el nombre del cliente: ";
     cin.getline(name, 30);
 
+    // Verifica si el cliente ha sido registrado en el archivo de lectura
     if(verifyClient(name, p, n) == -1){
         cout << "El cliente no ha sido registrado." << endl;
     }
     else{
+        ofstream wf;
+        wf.open(fileWrite);
+        wf.close();
+
         generateAccepted(name, p, n);
+        cout << "\n---> El archivo " << fileWrite << " con la lista de aceptados ha sido generado." << endl;
     }
     return 0;
 }
 
+// Cuenta la cantidad de lineas en el archivo de lectura
 int countLines(){
     ifstream rf;
     rf.open(fileRead);
@@ -75,7 +74,8 @@ int countLines(){
     rf.close();
     return c;
 }
-
+ 
+// Copia caracter por caracter el rango de una cadena de caracteres en un char ingresado
 void split(string str, int pos1, int pos2, char c[]){
     int pos = 0;
     for(int i = pos1; i < pos2; i++){
@@ -84,6 +84,7 @@ void split(string str, int pos1, int pos2, char c[]){
     }
 }
 
+// Llena un vector con la informacion de cada persona en el archivo de lectura
 void fillStructs(Person* p){
     ifstream rf;
     rf.open(fileRead);
@@ -102,19 +103,20 @@ void fillStructs(Person* p){
             int posTemp = str.find("/", pos3 + 1);
             int pos4 = str.find("/", posTemp + 1);
 
-            char a[3];
             split(str, 0, pos1, p[pos].name);
-            split(str, pos1 + 1, pos2, a);
-            //p[pos].age = stoi(a);
+            split(str, pos1 + 1, pos2, p[pos].age);
             split(str, pos2 + 1, pos3, p[pos].gender);
             split(str, pos3 + 1, posB, p[pos].birthday);
             split(str, posTemp + 1, pos4, p[pos].month);
-            split(str, pos4 + 1, pos4 + 5, p[pos].year);
+            split(str, pos4 + 1, posB, p[pos].year);
         }
         pos++;
     }
+    rf.close();
 }
 
+// Verifica si el cliente esta en el archivo de lectura
+// Si se encuentra en el archivo, devuelve su posicion en el vector de personas
 int verifyClient(char name[30], Person* p, int n){
     int pos = 0;
     for(int i  = 0; i < n; i++){
@@ -126,16 +128,31 @@ int verifyClient(char name[30], Person* p, int n){
     return -1;
 }
 
+// Genera el archivo de personas aceptadas
 void generateAccepted(char name[30], Person* p, int n){
-    int pos = verifyClient(name, p, n);
-
+    cout << "\nPERSONAS ACEPTADAS" << endl;
+    cout << "==================" << endl;
+    int pos = verifyClient(name, p, n), c = 0;
     ofstream wf;
     for(int i  = 0; i < n; i++){
-        if(p[pos].gender != p[i].gender){
-            cout << p[pos].gender << p[i].gender << endl;
-            wf.open(fileWrite);
+        if(strcmp(p[pos].gender, p[i].gender) != 0 && strcmp(p[pos].month, p[i].month) == 0 && strcmp(p[pos].year, p[i].year) == 0){
+            cout << "\nPersona #" << c + 1 << endl;
+            cout << "\tNombre: " << p[i].name << endl;
+            cout << "\tEdad: " << p[i].age << endl;
+            cout << "\tGenero: " << p[i].gender << endl;
+            cout << "\tFecha de nacimiento: " << p[i].birthday << endl;
+            wf.open(fileWrite, ios::app);
             wf << p[i].name << ";" << p[i].age << ";" << p[i].gender << ";" << p[i].birthday << ";" << endl;
             wf.close();
+            c++;
         }
+    }
+
+    if(c == 0){
+        cout << "\nNinguna persona cumple los requisitos para el cliente ingreasado." << endl;
+
+        wf.open(fileWrite);
+        wf << "Ninguna persona cumple los requisitos para el cliente ingreasado." << endl;
+        wf.close();
     }
 }
